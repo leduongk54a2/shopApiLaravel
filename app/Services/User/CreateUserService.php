@@ -7,7 +7,8 @@ use Illuminate\Support\Str;
 
 class CreateUserService extends BaseService
 {
-    public  function  execute($params) {
+
+    public function  execute($params) {
         $user = new User();
         $user->username= $params['username'];
         $user->full_name = $params['full_name'];

@@ -16,5 +16,4 @@ class BaseService
         $this->userRepository = $userRepository;
     }
 
-
 }

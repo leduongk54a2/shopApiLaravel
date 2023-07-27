@@ -57,5 +57,10 @@ abstract class BaseRepository implements RepositoryInterface
         return $this->model->destroy($id);
     }
 
+    public function where($param,$value)
+    {
+        return $this->model->where($param,$value);
+    }
+
 
 }

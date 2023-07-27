@@ -29,7 +29,7 @@ class CreateUserController extends BaseController
     {
 
         $validator = Validator::make($request->all(),
-            [ 'username' => 'required|string|max:255',
+            [ 'username' => 'required|string|max:255|unique:users',
             'full_name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
             'phone_number' => 'required|string|max:255',

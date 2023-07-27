@@ -16,6 +16,11 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('user/create', "\App\Http\Controllers\User\CreateUserController@createUser");
+
+Route::get("user/all", "\App\Http\Controllers\User\GetAllUserController");
+
+Route::post("user/update-password", "\App\Http\Controllers\User\UpdatePasswordController");
+
 //
 //Route::get('user/test', "\App\Http\Controllers\CreateUser");
 //Route::group(['middleware' => ['auth:api']], function () {
