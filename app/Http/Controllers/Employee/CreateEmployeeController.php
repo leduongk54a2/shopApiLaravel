@@ -1,33 +1,35 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\BaseController;
-use App\Services\User\CreateCustomerService;
+use App\Services\Employee\CreateEmployeeService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
-class CreateUserController extends BaseController
+class CreateEmployeeController extends BaseController
 {
 
-    protected CreateCustomerService $service;
+    protected CreateEmployeeService $service;
 
     /**
-     * @param CreateCustomerService $service
+     * @param CreateEmployeeService $service
      */
-    public function __construct(CreateCustomerService $service)
+    public function __construct(CreateEmployeeService $service)
     {
         $this->service = $service;
     }
 
-    /**
-     * @param Request $request
-     * @return string
-     */
-    public function createUser(Request $request)
-    {
 
+    /**
+     * Handle the incoming request.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function __invoke(Request $request)
+    {
         $validator = Validator::make($request->all(),
             [
                 'username' => 'required|string|max:255|unique:users',
@@ -35,7 +37,11 @@ class CreateUserController extends BaseController
                 'address' => 'required|string|max:255',
                 'phone_number' => 'required|string|max:255',
                 'email' => 'required|string|email:rfc,dns|max:255|unique:users',
-                'password' => 'required|string|min:8|max:255|confirmed'
+                'password' => 'required|string|min:8|max:255|confirmed',
+                'birth' => 'required|date_format:Y-m-d',
+                'salary' => 'required|integer',
+                'gender' => 'required|boolean'
+
             ]
         );
 
@@ -51,9 +57,6 @@ class CreateUserController extends BaseController
 
             }
         }
-
-
     }
-
 
 }

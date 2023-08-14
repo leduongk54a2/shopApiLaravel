@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Repositories;
+
+use Exception;
 use Illuminate\Container\Container as Application;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,26 +20,21 @@ abstract class BaseRepository implements RepositoryInterface
         $this->makeModel();
     }
 
-    abstract public  function model():string;
-
-    public function  makeModel(): void {
+    public function makeModel(): void
+    {
         $model = $this->app->make($this->model());
 
-        if(! $model instanceof  Model) {
+        if (!$model instanceof Model) {
             throw new Exception("class {$this->model()} must be instance of eloquent model");
         }
         $this->model = $model;
     }
 
+    abstract public function model(): string;
 
     public function all()
     {
         return $this->model->all();
-    }
-
-    public function find($id)
-    {
-        return $this->model->find($id);
     }
 
     public function create(array $data)
@@ -52,15 +49,23 @@ abstract class BaseRepository implements RepositoryInterface
         return $record->update($data);
     }
 
+    public function find($id)
+    {
+        return $this->model->find($id);
+    }
+
     public function delete($id)
     {
         return $this->model->destroy($id);
     }
 
-    public function where($param,$value)
+    public function where($param, $value)
     {
-        return $this->model->where($param,$value);
+        return $this->model->where($param, $value);
     }
 
-
+    public function join($table, $foreignColumn, $operator, $referenceColumn)
+    {
+        return $this->model->join($table, $foreignColumn, $operator, $referenceColumn);
+    }
 }

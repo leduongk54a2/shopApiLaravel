@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,17 +15,16 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('user/create', "\App\Http\Controllers\User\CreateUserController@createUser");
-
-Route::get("user/all", "\App\Http\Controllers\User\GetAllUserController");
-
+Route::post('user/login', 'App\Http\Controllers\User\LoginUserController');
 Route::post("user/update-password", "\App\Http\Controllers\User\UpdatePasswordController");
 
-//
-//Route::get('user/test', "\App\Http\Controllers\CreateUser");
-//Route::group(['middleware' => ['auth:api']], function () {
-//    Route::group(['prefix' => 'user'], function () {
-//        Route::post('/create', [CreateUserController::class,'createUser']);
-//    });
-//});
 
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::get("user/all", "\App\Http\Controllers\User\GetAllUserController");
+    Route::post("user/logout", "\App\Http\Controllers\User\LogoutUserController");
+    Route::group(['middleware' => 'role:admin'], function () {
+        Route::get("employee/all", "\App\Http\Controllers\Employee\GetAllEmployeeController");
+        Route::post("employee/add", "\App\Http\Controllers\Employee\CreateEmployeeController");
+    });
 
+});
