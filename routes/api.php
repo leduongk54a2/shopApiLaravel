@@ -25,6 +25,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['middleware' => 'role:admin'], function () {
         Route::get("employee/all", "\App\Http\Controllers\Employee\GetAllEmployeeController");
         Route::post("employee/add", "\App\Http\Controllers\Employee\CreateEmployeeController");
+        Route::get("employee/{id}", \App\Http\Controllers\Employee\GetEmployeeInfoController::class);
+        Route::put("employee/edit/{id}", \App\Http\Controllers\Employee\EditEmployeeController::class);
     });
 
 });

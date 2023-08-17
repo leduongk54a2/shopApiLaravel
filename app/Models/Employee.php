@@ -9,14 +9,21 @@ class Employee extends Model
 {
 
     protected $table = 'Employees';
-    protected $primaryKey = 'employeeId';
+    protected $primaryKey = 'employee_id';
 
     protected $fillable = [
-        'employeeId',
+        'employee_id',
         "birth",
         "gender",
         "user_id",
         "salary"
+    ];
+
+    protected $hidden = [
+        'role',
+        'remember_token',
+        'created_at',
+        'updated_at',
     ];
 
 

@@ -11,4 +11,9 @@ class EmployeeRepository extends BaseRepository
     {
         return Employee::class;
     }
+
+    public function withUser()
+    {
+        return Employee::query()->with("user");
+    }
 }

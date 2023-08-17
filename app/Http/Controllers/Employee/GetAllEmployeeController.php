@@ -25,8 +25,8 @@ class GetAllEmployeeController extends BaseController
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(Request $request): array
+    public function __invoke(Request $request): object
     {
-        return $this->sendResponse($this->service->execute(), "get done");
+        return $this->sendSuccess($this->service->execute(), "get done");
     }
 }
