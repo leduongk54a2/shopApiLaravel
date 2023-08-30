@@ -28,9 +28,15 @@ abstract class BaseRepository implements RepositoryInterface
             throw new Exception("class {$this->model()} must be instance of eloquent model");
         }
         $this->model = $model;
+
     }
 
     abstract public function model(): string;
+
+    public function getModel()
+    {
+        return $this->model;
+    }
 
     public function all()
     {

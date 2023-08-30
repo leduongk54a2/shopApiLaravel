@@ -15,11 +15,12 @@ class CheckUserRole
      * @param \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse) $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next, $role)
+    public function handle(Request $request, Closure $next, ...$roles)
     {
 
         $user = Auth::user();
-        if (!$user || $user->role !== $role) {
+
+        if (!$user || !in_array($user->role, $roles)) {
             return \response()->json(self::formatResponse(403, "Unauthenticated", []), 403);
         }
         return $next($request);

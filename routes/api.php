@@ -22,11 +22,23 @@ Route::post("user/update-password", "\App\Http\Controllers\User\UpdatePasswordCo
 Route::group(['middleware' => 'auth:api'], function () {
     Route::get("user/all", "\App\Http\Controllers\User\GetAllUserController");
     Route::post("user/logout", "\App\Http\Controllers\User\LogoutUserController");
-    Route::group(['middleware' => 'role:admin'], function () {
+    Route::group(['middleware' => 'roles:admin'], function () {
         Route::get("employee/all", "\App\Http\Controllers\Employee\GetAllEmployeeController");
         Route::post("employee/add", "\App\Http\Controllers\Employee\CreateEmployeeController");
-        Route::get("employee/{id}", \App\Http\Controllers\Employee\GetEmployeeInfoController::class);
         Route::put("employee/edit/{id}", \App\Http\Controllers\Employee\EditEmployeeController::class);
+        Route::get("employee/{id}", \App\Http\Controllers\Employee\GetEmployeeInfoController::class)->where("id",
+            "[0-9]+");
+        Route::delete("employee/delete", \App\Http\Controllers\Employee\DeleteEmployeeController::class);
+        Route::get("employee/search", \App\Http\Controllers\Employee\SearchEmployeeController::class);
+    });
+    Route::group(['middleware' => 'roles:admin,employee'], function () {
+        Route::get("category/all", \App\Http\Controllers\Category\GetAllInfoCategoryController::class);
+        Route::post("category", \App\Http\Controllers\Category\AddCategoryController::class);
+        Route::delete("category", \App\Http\Controllers\Category\DeleteCategoryController::class);
+        Route::patch("category/{id}", \App\Http\Controllers\Category\SetVisibleCategoryController::class);
+        Route::put("category/{id}", \App\Http\Controllers\Category\EditCategoryInfoController::class);
+        Route::get("category/{id}", \App\Http\Controllers\Category\GetInfoCategoryController::class);
+
     });
 
 });
