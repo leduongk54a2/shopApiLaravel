@@ -29,6 +29,7 @@ class SetVisibleCategoryController extends BaseController
     public function __invoke(Request $request, $id)
     {
         try {
+
             $this->service->execute($request->all(), $id);
 
             return $this->sendSuccess();

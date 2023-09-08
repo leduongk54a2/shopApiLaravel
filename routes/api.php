@@ -20,6 +20,7 @@ Route::post("user/update-password", "\App\Http\Controllers\User\UpdatePasswordCo
 
 
 Route::group(['middleware' => 'auth:api'], function () {
+    Route::post('/upload-image', \App\Http\Controllers\ImageController::class);
     Route::get("user/all", "\App\Http\Controllers\User\GetAllUserController");
     Route::post("user/logout", "\App\Http\Controllers\User\LogoutUserController");
     Route::group(['middleware' => 'roles:admin'], function () {
@@ -38,6 +39,12 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::patch("category/{id}", \App\Http\Controllers\Category\SetVisibleCategoryController::class);
         Route::put("category/{id}", \App\Http\Controllers\Category\EditCategoryInfoController::class);
         Route::get("category/{id}", \App\Http\Controllers\Category\GetInfoCategoryController::class);
+
+    });
+
+    Route::group(['middleware' => 'roles:admin,employee'], function () {
+        Route::post("product", \App\Http\Controllers\Product\CreateProductController::class);
+        Route::get("product/all", \App\Http\Controllers\Product\GetAllProductController::class);
 
     });
 
