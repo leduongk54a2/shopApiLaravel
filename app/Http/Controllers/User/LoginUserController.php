@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\BaseController;
+use App\Models\Cart;
 use App\Services\User\LoginUserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -32,7 +33,8 @@ class LoginUserController extends BaseController
         );
 
         if ($validator->fails()) {
-            return $this->sendError(['errors' => $validator->errors()], "validated fails", Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendError(['errors' => $validator->errors()], "validated fails",
+                Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
 
             $credentials = request(['username', 'password']);
@@ -40,8 +42,9 @@ class LoginUserController extends BaseController
                 return $this->sendError([], "Unauthorized", Response::HTTP_UNAUTHORIZED);
             }
             $user = Auth::user();
+            $cart = Cart::firstOrCreate(["userId" => $user->userID]);
             $accessToken = $user->createToken('authToken')->accessToken;
-            return $this->sendSuccess(['accessToken' => $accessToken, "user" => $user]);
+            return $this->sendSuccess(['accessToken' => $accessToken, "user" => $user, "cart" => $cart]);
         }
     }
 }

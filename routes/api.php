@@ -23,29 +23,37 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/upload-image', \App\Http\Controllers\ImageController::class);
     Route::get("user/all", "\App\Http\Controllers\User\GetAllUserController");
     Route::post("user/logout", "\App\Http\Controllers\User\LogoutUserController");
-    Route::group(['middleware' => 'roles:admin'], function () {
-        Route::get("employee/all", "\App\Http\Controllers\Employee\GetAllEmployeeController");
-        Route::post("employee/add", "\App\Http\Controllers\Employee\CreateEmployeeController");
-        Route::put("employee/edit/{id}", \App\Http\Controllers\Employee\EditEmployeeController::class);
-        Route::get("employee/{id}", \App\Http\Controllers\Employee\GetEmployeeInfoController::class)->where("id",
+    Route::group(['middleware' => 'roles:admin', 'prefix' => 'employee'], function () {
+        Route::get("/all", "\App\Http\Controllers\Employee\GetAllEmployeeController");
+        Route::post("/add", "\App\Http\Controllers\Employee\CreateEmployeeController");
+        Route::put("/edit/{id}", \App\Http\Controllers\Employee\EditEmployeeController::class);
+        Route::get("/{id}", \App\Http\Controllers\Employee\GetEmployeeInfoController::class)->where("id",
             "[0-9]+");
-        Route::delete("employee/delete", \App\Http\Controllers\Employee\DeleteEmployeeController::class);
-        Route::get("employee/search", \App\Http\Controllers\Employee\SearchEmployeeController::class);
+        Route::delete("/delete", \App\Http\Controllers\Employee\DeleteEmployeeController::class);
+        Route::get("/search", \App\Http\Controllers\Employee\SearchEmployeeController::class);
     });
-    Route::group(['middleware' => 'roles:admin,employee'], function () {
-        Route::get("category/all", \App\Http\Controllers\Category\GetAllInfoCategoryController::class);
-        Route::post("category", \App\Http\Controllers\Category\AddCategoryController::class);
-        Route::delete("category", \App\Http\Controllers\Category\DeleteCategoryController::class);
-        Route::patch("category/{id}", \App\Http\Controllers\Category\SetVisibleCategoryController::class);
-        Route::put("category/{id}", \App\Http\Controllers\Category\EditCategoryInfoController::class);
-        Route::get("category/{id}", \App\Http\Controllers\Category\GetInfoCategoryController::class);
+    Route::group(['prefix' => 'category'], function () {
+        Route::get("/all", \App\Http\Controllers\Category\GetAllInfoCategoryController::class);
+        Route::group(['middleware' => 'roles:admin,employee'], function () {
+            Route::post("", \App\Http\Controllers\Category\AddCategoryController::class);
+            Route::delete("", \App\Http\Controllers\Category\DeleteCategoryController::class);
+            Route::patch("/{id}", \App\Http\Controllers\Category\SetVisibleCategoryController::class);
+            Route::put("/{id}", \App\Http\Controllers\Category\EditCategoryInfoController::class);
+            Route::get("/{id}", \App\Http\Controllers\Category\GetInfoCategoryController::class);
+
+        });
+    });
+
+    Route::group(['prefix' => 'product'], function () {
+        Route::post("", \App\Http\Controllers\Product\CreateProductController::class);
+        Route::get("/all", \App\Http\Controllers\Product\GetAllProductController::class);
 
     });
 
-    Route::group(['middleware' => 'roles:admin,employee'], function () {
-        Route::post("product", \App\Http\Controllers\Product\CreateProductController::class);
-        Route::get("product/all", \App\Http\Controllers\Product\GetAllProductController::class);
-
+    Route::group(['prefix' => 'cart'], function () {
+        Route::post("", \App\Http\Controllers\Cart\AddCartController::class);
+        Route::post("/update-cart", \App\Http\Controllers\Cart\UpdateQuantityCartItem::class);
+        Route::get("", \App\Http\Controllers\Cart\GetCartInfoController::class);
     });
 
 });

@@ -10,7 +10,7 @@ class BaseController extends Controller
 {
     public function sendResponse($result, $message): JsonResponse
     {
-        return response()->json(self::formatResponse(Response::HTTP_OK, $message, [$result]), Response::HTTP_OK);
+        return response()->json(self::formatResponse(Response::HTTP_OK, $message, $result), Response::HTTP_OK);
     }
 
     public function formatResponse(int $statusCode, string $message, array|Collection $data = []): array
@@ -23,7 +23,7 @@ class BaseController extends Controller
     }
 
     public function sendSuccess(
-        array|Collection $data = [],
+        $data = [],
         string $message = 'OK',
         int $statusCode = Response::HTTP_OK
     ): JsonResponse {
