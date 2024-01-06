@@ -3,6 +3,8 @@
 namespace App\Services\Cart;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Lcobucci\JWT\Exception;
 
 class AddCartService extends BaseService
 {
@@ -14,26 +16,37 @@ class AddCartService extends BaseService
         $cart = $this->cartRepository->getModel()->where("userId", $user->userID)->first();
         $listCartItem = $params["listCartItem"];
         $total = 0;
-        foreach ($listCartItem as $item) {
-            $cartItem = $this->cartItemRepository->where("cartId", $cart->cartId)->where("productId",
-                $item["productId"])->first();
-            if ($cartItem === null) {
+        try {
+
+            DB::beginTransaction();
+
+            foreach ($listCartItem as $item) {
+                $cartItem = $this->cartItemRepository->where("cartId", $cart->cartId)->where("productId",
+                    $item["productId"])->first();
+                if ($cartItem === null) {
 
 
-                $cartItem = $this->cartItemRepository->create([
-                    "cartId" => $cart->cartId,
-                    "productId" => $item["productId"],
-                    "quantity" => $item["quantity"]
-                ]);
-            } else {
-                $this->cartItemRepository->where("cartId", $cart->cartId)->where("productId",
-                    $item["productId"])->update(["quantity" => $cartItem->quantity + $item["quantity"]]);
+                    $cartItem = $this->cartItemRepository->create([
+                        "cartId" => $cart->cartId,
+                        "productId" => $item["productId"],
+                        "quantity" => $item["quantity"]
+                    ]);
+                } else {
+                    $this->cartItemRepository->where("cartId", $cart->cartId)->where("productId",
+                        $item["productId"])->update(["quantity" => $item["quantity"]]);
+                }
+                $product = $this->productRepository->find($item["productId"]);
+                $total += $product->price * (1 - ($product->discount / 100)) * $item["quantity"];
             }
-            $product = $this->productRepository->find($item["productId"]);
-            $total += $product->price * (1 - ($product->discount / 100)) * $item["quantity"];
-        }
+            $cart->total = $total;
 
-        $cart->save();
+            $cart->save();
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return  $e->getMessage();
+        }
 
     }
 

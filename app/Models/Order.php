@@ -10,11 +10,9 @@ class Order extends Model
 {
     use HasFactory;
 
-    const CREATED_AT = 'orderDate';
-    protected $table = 'Orders';
-    protected $primaryKey = 'orderId';
+    protected $table = 'orders';
+    protected $primaryKey  = 'orderId';
     protected $fillable = [
-        'orderId',
         "shippedDate",
         "status",
         "customerInfo",
@@ -24,10 +22,11 @@ class Order extends Model
         "userId",
     ];
     protected $hidden = [
-        'orderDate',
         'updated_at',
     ];
-
+    protected $casts = [
+        'orderId' => 'integer', // Adjust the data type accordingly
+    ];
 
     /**
      * Get the phone associated with the user.

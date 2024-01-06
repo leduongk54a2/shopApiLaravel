@@ -16,11 +16,13 @@ class Product extends Model
     protected $fillable = [
         "productName",
         "categoryId",
+        "supplierId",
         "description",
         "discount",
         "quantity",
         "price",
         "imgUrl",
+        "display"
     ];
 
 
@@ -36,5 +38,13 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Get the phone associated with the user.
+     */
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class);
     }
 }

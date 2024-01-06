@@ -30,10 +30,11 @@ class GetAllProductController extends BaseController
     {
 
         $categoryId = $request->query('categoryId');
+        $supplierId = $request->query('supplierId');
         $sortTypePrice = $request->query('sortTypePrice');
         $keyword = $request->query('keyword');
         try {
-            return $this->sendSuccess($this->service->execute($categoryId, $sortTypePrice, $keyword));
+            return $this->sendSuccess($this->service->execute($categoryId,$supplierId, $sortTypePrice, $keyword));
         } catch (\Exception $e) {
             return $this->sendError([], $e->getMessage());
         }

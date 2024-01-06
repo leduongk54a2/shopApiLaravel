@@ -4,20 +4,24 @@ namespace App\Http\Controllers\Cart;
 
 use App\Http\Controllers\BaseController;
 use App\Services\Cart\AddCartService;
+use App\Services\Cart\GetCartInfoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AddCartController extends BaseController
 {
 
-    protected AddCartService $service;
+    protected AddCartService $addCartService;
+    protected GetCartInfoService $getCartInfoService;
 
     /**
-     * @param AddCartService $service
+     * @param AddCartService $addCartService
+     * @param GetCartInfoService $getCartInfoService
      */
-    public function __construct(AddCartService $service)
+    public function __construct(AddCartService $addCartService, GetCartInfoService $getCartInfoService)
     {
-        $this->service = $service;
+        $this->addCartService = $addCartService;
+        $this->getCartInfoService = $getCartInfoService;
     }
 
 
@@ -30,13 +34,11 @@ class AddCartController extends BaseController
     public function __invoke(Request $request)
     {
         try {
-            DB::beginTransaction();
-            $this->service->execute($request->all());
-            DB::commit();
-            $this->sendSuccess();
+            $this->addCartService->execute($request->all());
+            $listCartItemResponse = $this->getCartInfoService->execute();
+            return $this->sendSuccess($listCartItemResponse);
         } catch (\Exception $e) {
-            DB::rollBack();
-            return $e->getMessage();
+            return  $this->sendError([],$e->getMessage());
         }
     }
 }
